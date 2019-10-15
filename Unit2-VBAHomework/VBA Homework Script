@@ -1,0 +1,68 @@
+Sub stocks():
+
+Application.Visible = False 
+
+Dim column As Integer
+Dim volume As Integer
+Dim ws As Worksheet
+
+For Each ws In Worksheets
+ws.Activate
+
+column = 1
+row_count = 2
+opening_ticker = 0
+closing_ticker = 0
+opening_price = 0
+volume = 7
+
+Cells(1, 9) = "Ticker"
+Cells(1, 10) = "Yearly Change"
+Cells(1, 11) = "Percent Change"
+Cells(1, 12) = "Total Stock Volume"
+
+lastrow = Cells(Rows.Count, 1).End(xlUp).Row + 1
+lastcol = Cells(1, Columns.Count).End(xlToLeft).column
+
+    For i = 2 To lastrow
+
+        If Cells(i - 1, column).Value <> Cells(i, column).Value Then
+            Cells(row_count, 9).Value = Cells(i, column).Value
+            
+            row_count = row_count + 1
+                        
+                If i <> 2 Then
+                
+                    closing_ticker = Cells(i - 1, 6).Value
+                    opening_ticker = Cells(opening_price, 3).Value
+        
+                    Cells(row_count - 2, 10).Value = (closing_ticker - opening_ticker)
+
+                    Cells(row_count - 2, 11).Value = ((closing_ticker - opening_ticker) / opening_ticker)
+                    Columns("K").NumberFormat = "#.0#%"
+                    
+                    Cells(row_count - 2, 12).Value = Application.Sum(Range(Cells(opening_price, volume), Cells(i - 1, volume)))
+                    
+                        
+                            If Cells(row_count - 2, 10).Value <= 0 Then
+                            Cells(row_count - 2, 10).Interior.ColorIndex = 3
+                            
+                            Else
+                            Cells(row_count - 2, 10).Interior.ColorIndex = 4
+                            
+                            End If
+                   
+                   
+                End If
+                
+             opening_price = i
+                 
+                            
+        End If
+            
+    Next i
+    Next ws
+
+Application.Visible = True  
+    
+End Sub
